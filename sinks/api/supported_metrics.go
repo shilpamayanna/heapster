@@ -288,6 +288,292 @@ var statMetrics = []SupportedStatMetric{
 		},
 		OnlyExportIfChanged: true,
 	},
+	{
+		MetricDescriptor: MetricDescriptor{
+			Name:        "filesystem/reads_completed",
+			Description: "The total number of reads completed",
+			Type:        MetricGauge,
+			ValueType:   ValueInt64,
+			Units:       UnitsBytes,
+			Labels:      metricLabels,
+		},
+		HasValue: func(spec *source_api.ContainerSpec) bool {
+			return spec.HasFilesystem
+		},
+		GetValue: func(spec *source_api.ContainerSpec, stat *source_api.ContainerStats) []InternalPoint {
+			result := make([]InternalPoint, 0, len(stat.Filesystem))
+			for _, fs := range stat.Filesystem {
+				result = append(result, InternalPoint{
+					Value: int64(fs.ReadsCompleted),
+					Labels: map[string]string{
+						LabelResourceID.Key: fs.Device,
+					},
+				})
+			}
+			return result
+		},
+		OnlyExportIfChanged: true,
+	},
+	{
+		MetricDescriptor: MetricDescriptor{
+			Name:        "filesystem/reads_merged",
+			Description: "The total number of reads merged",
+			Type:        MetricGauge,
+			ValueType:   ValueInt64,
+			Units:       UnitsBytes,
+			Labels:      metricLabels,
+		},
+		HasValue: func(spec *source_api.ContainerSpec) bool {
+			return spec.HasFilesystem
+		},
+		GetValue: func(spec *source_api.ContainerSpec, stat *source_api.ContainerStats) []InternalPoint {
+			result := make([]InternalPoint, 0, len(stat.Filesystem))
+			for _, fs := range stat.Filesystem {
+				result = append(result, InternalPoint{
+					Value: int64(fs.ReadsMerged),
+					Labels: map[string]string{
+						LabelResourceID.Key: fs.Device,
+					},
+				})
+			}
+			return result
+		},
+		OnlyExportIfChanged: true,
+	},
+	{
+		MetricDescriptor: MetricDescriptor{
+			Name:        "filesystem/sectors_read",
+			Description: "The total number of sectors read",
+			Type:        MetricGauge,
+			ValueType:   ValueInt64,
+			Units:       UnitsBytes,
+			Labels:      metricLabels,
+		},
+		HasValue: func(spec *source_api.ContainerSpec) bool {
+			return spec.HasFilesystem
+		},
+		GetValue: func(spec *source_api.ContainerSpec, stat *source_api.ContainerStats) []InternalPoint {
+			result := make([]InternalPoint, 0, len(stat.Filesystem))
+			for _, fs := range stat.Filesystem {
+				result = append(result, InternalPoint{
+					Value: int64(fs.SectorsRead),
+					Labels: map[string]string{
+						LabelResourceID.Key: fs.Device,
+					},
+				})
+			}
+			return result
+		},
+		OnlyExportIfChanged: true,
+	},
+	{
+		MetricDescriptor: MetricDescriptor{
+			Name:        "filesystem/read_time",
+			Description: "The total number of milliseconds spent by all reads",
+			Type:        MetricGauge,
+			ValueType:   ValueInt64,
+			Units:       UnitsMilliseconds,
+			Labels:      metricLabels,
+		},
+		HasValue: func(spec *source_api.ContainerSpec) bool {
+			return spec.HasFilesystem
+		},
+		GetValue: func(spec *source_api.ContainerSpec, stat *source_api.ContainerStats) []InternalPoint {
+			result := make([]InternalPoint, 0, len(stat.Filesystem))
+			for _, fs := range stat.Filesystem {
+				result = append(result, InternalPoint{
+					Value: int64(fs.ReadTime),
+					Labels: map[string]string{
+						LabelResourceID.Key: fs.Device,
+					},
+				})
+			}
+			return result
+		},
+		OnlyExportIfChanged: true,
+	},
+	{
+		MetricDescriptor: MetricDescriptor{
+			Name:        "filesystem/writes_completed",
+			Description: "The total number of writes completed",
+			Type:        MetricGauge,
+			ValueType:   ValueInt64,
+			Units:       UnitsBytes,
+			Labels:      metricLabels,
+		},
+		HasValue: func(spec *source_api.ContainerSpec) bool {
+			return spec.HasFilesystem
+		},
+		GetValue: func(spec *source_api.ContainerSpec, stat *source_api.ContainerStats) []InternalPoint {
+			result := make([]InternalPoint, 0, len(stat.Filesystem))
+			for _, fs := range stat.Filesystem {
+				result = append(result, InternalPoint{
+					Value: int64(fs.WritesCompleted),
+					Labels: map[string]string{
+						LabelResourceID.Key: fs.Device,
+					},
+				})
+			}
+			return result
+		},
+		OnlyExportIfChanged: true,
+	},
+	{
+		MetricDescriptor: MetricDescriptor{
+			Name:        "filesystem/writes_merged",
+			Description: "The total number of writes merged",
+			Type:        MetricGauge,
+			ValueType:   ValueInt64,
+			Units:       UnitsBytes,
+			Labels:      metricLabels,
+		},
+		HasValue: func(spec *source_api.ContainerSpec) bool {
+			return spec.HasFilesystem
+		},
+		GetValue: func(spec *source_api.ContainerSpec, stat *source_api.ContainerStats) []InternalPoint {
+			result := make([]InternalPoint, 0, len(stat.Filesystem))
+			for _, fs := range stat.Filesystem {
+				result = append(result, InternalPoint{
+					Value: int64(fs.WritesMerged),
+					Labels: map[string]string{
+						LabelResourceID.Key: fs.Device,
+					},
+				})
+			}
+			return result
+		},
+		OnlyExportIfChanged: true,
+	},
+	{
+		MetricDescriptor: MetricDescriptor{
+			Name:        "filesystem/sectors_written",
+			Description: "The total number of sectors written",
+			Type:        MetricGauge,
+			ValueType:   ValueInt64,
+			Units:       UnitsBytes,
+			Labels:      metricLabels,
+		},
+		HasValue: func(spec *source_api.ContainerSpec) bool {
+			return spec.HasFilesystem
+		},
+		GetValue: func(spec *source_api.ContainerSpec, stat *source_api.ContainerStats) []InternalPoint {
+			result := make([]InternalPoint, 0, len(stat.Filesystem))
+			for _, fs := range stat.Filesystem {
+				result = append(result, InternalPoint{
+					Value: int64(fs.SectorsWritten),
+					Labels: map[string]string{
+						LabelResourceID.Key: fs.Device,
+					},
+				})
+			}
+			return result
+		},
+		OnlyExportIfChanged: true,
+	},
+	{
+		MetricDescriptor: MetricDescriptor{
+			Name:        "filesystem/write_time",
+			Description: "The total number of milliseconds spent by all writes",
+			Type:        MetricGauge,
+			ValueType:   ValueInt64,
+			Units:       UnitsMilliseconds,
+			Labels:      metricLabels,
+		},
+		HasValue: func(spec *source_api.ContainerSpec) bool {
+			return spec.HasFilesystem
+		},
+		GetValue: func(spec *source_api.ContainerSpec, stat *source_api.ContainerStats) []InternalPoint {
+			result := make([]InternalPoint, 0, len(stat.Filesystem))
+			for _, fs := range stat.Filesystem {
+				result = append(result, InternalPoint{
+					Value: int64(fs.WriteTime),
+					Labels: map[string]string{
+						LabelResourceID.Key: fs.Device,
+					},
+				})
+			}
+			return result
+		},
+		OnlyExportIfChanged: true,
+	},
+	{
+		MetricDescriptor: MetricDescriptor{
+			Name:        "filesystem/io_in_progress",
+			Description: "Number of I/Os in progress",
+			Type:        MetricGauge,
+			ValueType:   ValueInt64,
+			Units:       UnitsBytes,
+			Labels:      metricLabels,
+		},
+		HasValue: func(spec *source_api.ContainerSpec) bool {
+			return spec.HasFilesystem
+		},
+		GetValue: func(spec *source_api.ContainerSpec, stat *source_api.ContainerStats) []InternalPoint {
+			result := make([]InternalPoint, 0, len(stat.Filesystem))
+			for _, fs := range stat.Filesystem {
+				result = append(result, InternalPoint{
+					Value: int64(fs.IoInProgress),
+					Labels: map[string]string{
+						LabelResourceID.Key: fs.Device,
+					},
+				})
+			}
+			return result
+		},
+		OnlyExportIfChanged: true,
+	},
+	{
+		MetricDescriptor: MetricDescriptor{
+			Name:        "filesystem/io_time",
+			Description: "Number of milliseconds spent doing I/Os",
+			Type:        MetricGauge,
+			ValueType:   ValueInt64,
+			Units:       UnitsMilliseconds,
+			Labels:      metricLabels,
+		},
+		HasValue: func(spec *source_api.ContainerSpec) bool {
+			return spec.HasFilesystem
+		},
+		GetValue: func(spec *source_api.ContainerSpec, stat *source_api.ContainerStats) []InternalPoint {
+			result := make([]InternalPoint, 0, len(stat.Filesystem))
+			for _, fs := range stat.Filesystem {
+				result = append(result, InternalPoint{
+					Value: int64(fs.IoTime),
+					Labels: map[string]string{
+						LabelResourceID.Key: fs.Device,
+					},
+				})
+			}
+			return result
+		},
+		OnlyExportIfChanged: true,
+	},
+	{
+		MetricDescriptor: MetricDescriptor{
+			Name:        "filesystem/weighted_io_time",
+			Description: "Number of weighted milliseconds spent doing I/Os",
+			Type:        MetricGauge,
+			ValueType:   ValueInt64,
+			Units:       UnitsMilliseconds,
+			Labels:      metricLabels,
+		},
+		HasValue: func(spec *source_api.ContainerSpec) bool {
+			return spec.HasFilesystem
+		},
+		GetValue: func(spec *source_api.ContainerSpec, stat *source_api.ContainerStats) []InternalPoint {
+			result := make([]InternalPoint, 0, len(stat.Filesystem))
+			for _, fs := range stat.Filesystem {
+				result = append(result, InternalPoint{
+					Value: int64(fs.WeightedIoTime),
+					Labels: map[string]string{
+						LabelResourceID.Key: fs.Device,
+					},
+				})
+			}
+			return result
+		},
+		OnlyExportIfChanged: true,
+	},
 
 	// TODO(vmarmol): DiskIO stats if we find those useful and know how to export them in a user-friendly way.
 }
