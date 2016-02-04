@@ -268,7 +268,7 @@ func new(c config) (sink_api.ExternalSink, error) {
 		return nil, err
 	}
 	if _, _, err := client.Ping(); err != nil {
-		return nil, fmt.Errorf("failed to ping InfluxDB server at %q - %v", c.host, err)
+		glog.Warningf("failed to ping InfluxDB server at %q - %v", c.host, err)
 	}
 	return &influxdbSink{
 		client: client,
