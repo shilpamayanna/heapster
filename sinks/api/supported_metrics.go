@@ -189,7 +189,16 @@ var statMetrics = []SupportedStatMetric{
 			return spec.HasNetwork
 		},
 		GetValue: func(spec *source_api.ContainerSpec, stat *source_api.ContainerStats) []InternalPoint {
-			return []InternalPoint{{Value: int64(stat.Network.RxBytes)}}
+			result := make([]InternalPoint, 0, len(stat.Network.Interfaces))
+			for _, intf := range stat.Network.Interfaces {
+				result = append(result, InternalPoint{
+					Value: int64(intf.RxBytes),
+					Labels: map[string]string{
+						LabelResourceID.Key: intf.Name,
+					},
+				})
+			}
+			return result
 		},
 	},
 	{
@@ -204,7 +213,16 @@ var statMetrics = []SupportedStatMetric{
 			return spec.HasNetwork
 		},
 		GetValue: func(spec *source_api.ContainerSpec, stat *source_api.ContainerStats) []InternalPoint {
-			return []InternalPoint{{Value: int64(stat.Network.RxErrors)}}
+			result := make([]InternalPoint, 0, len(stat.Network.Interfaces))
+			for _, intf := range stat.Network.Interfaces {
+				result = append(result, InternalPoint{
+					Value: int64(intf.RxErrors),
+					Labels: map[string]string{
+						LabelResourceID.Key: intf.Name,
+					},
+				})
+			}
+			return result
 		},
 	},
 	{
@@ -219,7 +237,16 @@ var statMetrics = []SupportedStatMetric{
 			return spec.HasNetwork
 		},
 		GetValue: func(spec *source_api.ContainerSpec, stat *source_api.ContainerStats) []InternalPoint {
-			return []InternalPoint{{Value: int64(stat.Network.TxBytes)}}
+			result := make([]InternalPoint, 0, len(stat.Network.Interfaces))
+			for _, intf := range stat.Network.Interfaces {
+				result = append(result, InternalPoint{
+					Value: int64(intf.TxBytes),
+					Labels: map[string]string{
+						LabelResourceID.Key: intf.Name,
+					},
+				})
+			}
+			return result
 		},
 	},
 	{
@@ -234,7 +261,16 @@ var statMetrics = []SupportedStatMetric{
 			return spec.HasNetwork
 		},
 		GetValue: func(spec *source_api.ContainerSpec, stat *source_api.ContainerStats) []InternalPoint {
-			return []InternalPoint{{Value: int64(stat.Network.TxErrors)}}
+			result := make([]InternalPoint, 0, len(stat.Network.Interfaces))
+			for _, intf := range stat.Network.Interfaces {
+				result = append(result, InternalPoint{
+					Value: int64(intf.TxErrors),
+					Labels: map[string]string{
+						LabelResourceID.Key: intf.Name,
+					},
+				})
+			}
+			return result
 		},
 	},
 	{
