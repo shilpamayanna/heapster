@@ -28,6 +28,8 @@ import (
 	source_api "k8s.io/heapster/sources/api"
 )
 
+const kMaxTimeDelay = 5 * time.Second
+
 // Manager provides an interface to control the core of heapster.
 // Implementations are not required to be thread safe.
 type Manager interface {
@@ -150,6 +152,10 @@ func (rm *realManager) Housekeep() {
 		// TODO: consider adding some delay here
 		select {
 		case <-time.After(timeToNextSync):
+			if time.Since(end) > kMaxTimeDelay {
+				glog.V(1).Infof("Time delay in running housekeep to fetch statistics is %v", time.Since(end))
+			}
+			end = time.Now()
 			rm.housekeep(start, end)
 			rm.lastSync = end
 		case <-rm.mainStopChan:
