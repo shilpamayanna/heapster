@@ -19,6 +19,7 @@ import (
 	"io/ioutil"
 	"net/url"
 	"strconv"
+	"time"
 
 	"github.com/golang/glog"
 	"k8s.io/heapster/extpoints"
@@ -39,6 +40,7 @@ const (
 	defaultUseServiceAccount  = false
 	defaultServiceAccountFile = "/var/run/secrets/kubernetes.io/serviceaccount/token"
 	defaultInClusterConfig    = true
+	defaultHTTPTimeout        = 10 * time.Second
 )
 
 func init() {
@@ -176,6 +178,7 @@ func CreateKubeSources(uri *url.URL, c cache.Cache) ([]api.Source, error) {
 		Port:            uint(kubeletPort),
 		EnableHttps:     kubeletHttps,
 		TLSClientConfig: kubeConfig.TLSClientConfig,
+		HTTPTimeout:     defaultHTTPTimeout,
 	}
 
 	kubeletApi, err := datasource.NewKubelet(kubeletConfig)

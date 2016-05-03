@@ -28,7 +28,10 @@ import (
 	source_api "k8s.io/heapster/sources/api"
 )
 
-const kMaxTimeDelay = 5 * time.Second
+const (
+	kScrapeTimeout = 10 * time.Second
+	kMaxTimeDelay  = 5 * time.Second
+)
 
 // Manager provides an interface to control the core of heapster.
 // Implementations are not required to be thread safe.
@@ -173,9 +176,19 @@ func (rm *realManager) housekeep(start, end time.Time) {
 		go rm.scrapeSource(s, start, end, &sd, errChan)
 	}
 	var errors []string
+	timedOut := false
 	for i := 0; i < len(rm.sources); i++ {
-		if err := <-errChan; err != nil {
-			errors = append(errors, err.Error())
+		select {
+		case err := <-errChan:
+			if err != nil {
+				errors = append(errors, err.Error())
+			}
+		case <-time.After(kScrapeTimeout):
+			glog.Errorf("Failed to get all responses in time. Timed out ")
+			timedOut = true
+		}
+		if timedOut {
+			break
 		}
 	}
 	glog.V(2).Infof("completed scraping data from sources. Errors: %v", errors)
