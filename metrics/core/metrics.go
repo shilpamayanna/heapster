@@ -31,11 +31,7 @@ var StandardMetrics = []Metric{
 	MetricMemoryUsage,
 	MetricMemoryWorkingSet,
 	MetricMemoryPageFaults,
-	MetricMemoryMajorPageFaults,
-	MetricNetworkRx,
-	MetricNetworkRxErrors,
-	MetricNetworkTx,
-	MetricNetworkTxErrors}
+	MetricMemoryMajorPageFaults}
 
 // Metrics computed based on cluster state using Kubernetes API.
 var AdditionalMetrics = []Metric{
@@ -67,7 +63,10 @@ var LabeledMetrics = []Metric{
 	MetricFilesystemUsage,
 	MetricFilesystemLimit,
 	MetricFilesystemAvailable,
-}
+	MetricNetworkRx,
+	MetricNetworkRxErrors,
+	MetricNetworkTx,
+	MetricNetworkTxErrors}
 
 var NodeAutoscalingMetrics = []Metric{
 	MetricNodeCpuUtilization,
@@ -202,14 +201,28 @@ var MetricNetworkRx = Metric{
 		ValueType:   ValueInt64,
 		Units:       UnitsBytes,
 	},
-	HasValue: func(spec *cadvisor.ContainerSpec) bool {
+	HasLabeledMetric: func(spec *cadvisor.ContainerSpec) bool {
 		return spec.HasNetwork
 	},
-	GetValue: func(spec *cadvisor.ContainerSpec, stat *cadvisor.ContainerStats) MetricValue {
-		return MetricValue{
-			ValueType:  ValueInt64,
-			MetricType: MetricCumulative,
-			IntValue:   int64(stat.Network.RxBytes)}
+	GetLabeledMetric: func(spec *cadvisor.ContainerSpec, stat *cadvisor.ContainerStats) []LabeledMetric {
+		if stat.Network.Interfaces == nil {
+			return nil
+		}
+		result := make([]LabeledMetric, 0, len(stat.Network.Interfaces))
+		for _, intf := range stat.Network.Interfaces {
+			result = append(result, LabeledMetric{
+				Name: "network/rx",
+				Labels: map[string]string{
+					LabelResourceID.Key: intf.Name,
+				},
+				MetricValue: MetricValue{
+					ValueType:  ValueInt64,
+					MetricType: MetricCumulative,
+					IntValue:   int64(intf.RxBytes),
+				},
+			})
+		}
+		return result
 	},
 }
 
@@ -221,14 +234,28 @@ var MetricNetworkRxErrors = Metric{
 		ValueType:   ValueInt64,
 		Units:       UnitsCount,
 	},
-	HasValue: func(spec *cadvisor.ContainerSpec) bool {
+	HasLabeledMetric: func(spec *cadvisor.ContainerSpec) bool {
 		return spec.HasNetwork
 	},
-	GetValue: func(spec *cadvisor.ContainerSpec, stat *cadvisor.ContainerStats) MetricValue {
-		return MetricValue{
-			ValueType:  ValueInt64,
-			MetricType: MetricCumulative,
-			IntValue:   int64(stat.Network.RxErrors)}
+	GetLabeledMetric: func(spec *cadvisor.ContainerSpec, stat *cadvisor.ContainerStats) []LabeledMetric {
+		if stat.Network.Interfaces == nil {
+			return nil
+		}
+		result := make([]LabeledMetric, 0, len(stat.Network.Interfaces))
+		for _, intf := range stat.Network.Interfaces {
+			result = append(result, LabeledMetric{
+				Name: "network/rx_errors",
+				Labels: map[string]string{
+					LabelResourceID.Key: intf.Name,
+				},
+				MetricValue: MetricValue{
+					ValueType:  ValueInt64,
+					MetricType: MetricCumulative,
+					IntValue:   int64(intf.RxErrors),
+				},
+			})
+		}
+		return result
 	},
 }
 
@@ -240,14 +267,28 @@ var MetricNetworkTx = Metric{
 		ValueType:   ValueInt64,
 		Units:       UnitsBytes,
 	},
-	HasValue: func(spec *cadvisor.ContainerSpec) bool {
+	HasLabeledMetric: func(spec *cadvisor.ContainerSpec) bool {
 		return spec.HasNetwork
 	},
-	GetValue: func(spec *cadvisor.ContainerSpec, stat *cadvisor.ContainerStats) MetricValue {
-		return MetricValue{
-			ValueType:  ValueInt64,
-			MetricType: MetricCumulative,
-			IntValue:   int64(stat.Network.TxBytes)}
+	GetLabeledMetric: func(spec *cadvisor.ContainerSpec, stat *cadvisor.ContainerStats) []LabeledMetric {
+		if stat.Network.Interfaces == nil {
+			return nil
+		}
+		result := make([]LabeledMetric, 0, len(stat.Network.Interfaces))
+		for _, intf := range stat.Network.Interfaces {
+			result = append(result, LabeledMetric{
+				Name: "network/tx",
+				Labels: map[string]string{
+					LabelResourceID.Key: intf.Name,
+				},
+				MetricValue: MetricValue{
+					ValueType:  ValueInt64,
+					MetricType: MetricCumulative,
+					IntValue:   int64(intf.TxBytes),
+				},
+			})
+		}
+		return result
 	},
 }
 
@@ -259,14 +300,28 @@ var MetricNetworkTxErrors = Metric{
 		ValueType:   ValueInt64,
 		Units:       UnitsCount,
 	},
-	HasValue: func(spec *cadvisor.ContainerSpec) bool {
+	HasLabeledMetric: func(spec *cadvisor.ContainerSpec) bool {
 		return spec.HasNetwork
 	},
-	GetValue: func(spec *cadvisor.ContainerSpec, stat *cadvisor.ContainerStats) MetricValue {
-		return MetricValue{
-			ValueType:  ValueInt64,
-			MetricType: MetricCumulative,
-			IntValue:   int64(stat.Network.TxErrors)}
+	GetLabeledMetric: func(spec *cadvisor.ContainerSpec, stat *cadvisor.ContainerStats) []LabeledMetric {
+		if stat.Network.Interfaces == nil {
+			return nil
+		}
+		result := make([]LabeledMetric, 0, len(stat.Network.Interfaces))
+		for _, intf := range stat.Network.Interfaces {
+			result = append(result, LabeledMetric{
+				Name: "network/tx_errors",
+				Labels: map[string]string{
+					LabelResourceID.Key: intf.Name,
+				},
+				MetricValue: MetricValue{
+					ValueType:  ValueInt64,
+					MetricType: MetricCumulative,
+					IntValue:   int64(intf.TxErrors),
+				},
+			})
+		}
+		return result
 	},
 }
 
